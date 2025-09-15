@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Plantilla de invitación a reunión -->
+    <record id="email_template_meeting_invitation" model="mail.template">
+        <field name="name">Invitación a Reunión Zoom</field>
+        <field name="model_id" ref="model_zoom_meeting_attendee"/>
+        <field name="subject">Invitación a Reunión: {{ object.meeting_id.name }}</field>
+        <field name="email_from">{{ (object.meeting_id.create_uid.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Hola {{ object.name or 'Estimado/a' }},
+                </p>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Te invitamos a participar en la siguiente reunión:
+                </p>
+                <br/>
+                <div style="margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #f8f9fa; border-left: 4px solid #007bff;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <strong>Reunión:</strong> {{ object.meeting_id.name }}<br/>
+                        <strong>Fecha y Hora:</strong> {{ object.meeting_id.start_time.strftime('%d/%m/%Y a las %H:%M') }}<br/>
+                        <strong>Duración:</strong> {{ object.meeting_id.duration }} minutos<br/>
+                        {% if object.meeting_id.description %}
+                        <strong>Descripción:</strong> {{ object.meeting_id.description }}<br/>
+                        {% endif %}
+                    </p>
+                </div>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <strong>Para unirte a la reunión:</strong>
+                </p>
+                <ul style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <li><strong>URL de unirse:</strong> <a href="{{ object.meeting_id.join_url }}" style="color: #007bff;">{{ object.meeting_id.join_url }}</a></li>
+                    <li><strong>Meeting ID:</strong> {{ object.meeting_id.meeting_id }}</li>
+                    {% if object.meeting_id.password %}
+                    <li><strong>Contraseña:</strong> {{ object.meeting_id.password }}</li>
+                    {% endif %}
+                </ul>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <strong>Por favor confirma tu asistencia:</strong>
+                </p>
+                <div style="margin: 16px 0px 16px 0px; text-align: center;">
+                    <a href="{{ object.meeting_id.join_url }}?action=confirm" 
+                       style="background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 5px;">
+                        ✅ Confirmar Asistencia
+                    </a>
+                    <a href="{{ object.meeting_id.join_url }}?action=decline" 
+                       style="background-color: #dc3545; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 5px;">
+                        ❌ Rechazar Invitación
+                    </a>
+                </div>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Si tienes alguna pregunta, no dudes en contactarnos.
+                </p>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Saludos cordiales,<br/>
+                    {{ object.meeting_id.create_uid.name or 'El equipo' }}
+                </p>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <!-- Plantilla de recordatorio de reunión -->
+    <record id="email_template_meeting_reminder" model="mail.template">
+        <field name="name">Recordatorio de Reunión Zoom</field>
+        <field name="model_id" ref="model_zoom_meeting_attendee"/>
+        <field name="subject">Recordatorio: Reunión en 1 hora - {{ object.meeting_id.name }}</field>
+        <field name="email_from">{{ (object.meeting_id.create_uid.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Hola {{ object.name or 'Estimado/a' }},
+                </p>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <strong>Recordatorio:</strong> Tienes una reunión programada en 1 hora.
+                </p>
+                <br/>
+                <div style="margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #fff3cd; border-left: 4px solid #ffc107;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <strong>Reunión:</strong> {{ object.meeting_id.name }}<br/>
+                        <strong>Fecha y Hora:</strong> {{ object.meeting_id.start_time.strftime('%d/%m/%Y a las %H:%M') }}<br/>
+                        <strong>Duración:</strong> {{ object.meeting_id.duration }} minutos<br/>
+                    </p>
+                </div>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <strong>Para unirte a la reunión:</strong>
+                </p>
+                <ul style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <li><strong>URL de unirse:</strong> <a href="{{ object.meeting_id.join_url }}" style="color: #007bff;">{{ object.meeting_id.join_url }}</a></li>
+                    <li><strong>Meeting ID:</strong> {{ object.meeting_id.meeting_id }}</li>
+                </ul>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    ¡Te esperamos en la reunión!
+                </p>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Saludos cordiales,<br/>
+                    {{ object.meeting_id.create_uid.name or 'El equipo' }}
+                </p>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <!-- Plantilla de confirmación de asistencia -->
+    <record id="email_template_attendance_confirmation" model="mail.template">
+        <field name="name">Confirmación de Asistencia</field>
+        <field name="model_id" ref="model_zoom_meeting_attendee"/>
+        <field name="subject">Asistencia Confirmada - {{ object.meeting_id.name }}</field>
+        <field name="email_from">{{ (object.meeting_id.create_uid.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Hola {{ object.name or 'Estimado/a' }},
+                </p>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <strong>¡Gracias por confirmar tu asistencia!</strong>
+                </p>
+                <br/>
+                <div style="margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #d4edda; border-left: 4px solid #28a745;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <strong>Reunión:</strong> {{ object.meeting_id.name }}<br/>
+                        <strong>Fecha y Hora:</strong> {{ object.meeting_id.start_time.strftime('%d/%m/%Y a las %H:%M') }}<br/>
+                        <strong>Estado:</strong> ✅ Asistencia Confirmada<br/>
+                        <strong>Fecha de Confirmación:</strong> {{ object.confirmation_date.strftime('%d/%m/%Y a las %H:%M') if object.confirmation_date else 'Recién confirmado' }}
+                    </p>
+                </div>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <strong>Información de la reunión:</strong>
+                </p>
+                <ul style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <li><strong>URL de unirse:</strong> <a href="{{ object.meeting_id.join_url }}" style="color: #007bff;">{{ object.meeting_id.join_url }}</a></li>
+                    <li><strong>Meeting ID:</strong> {{ object.meeting_id.meeting_id }}</li>
+                </ul>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Te recordaremos la reunión 1 hora antes. ¡Nos vemos pronto!
+                </p>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Saludos cordiales,<br/>
+                    {{ object.meeting_id.create_uid.name or 'El equipo' }}
+                </p>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <!-- Plantilla de notificación al organizador -->
+    <record id="email_template_organizer_notification" model="mail.template">
+        <field name="name">Notificación al Organizador</field>
+        <field name="model_id" ref="model_zoom_meeting"/>
+        <field name="subject">Actualización de Asistencia - {{ object.name }}</field>
+        <field name="email_from">{{ (object.create_uid.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.create_uid.email_formatted }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Hola {{ object.create_uid.name }},
+                </p>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Se ha actualizado la asistencia para tu reunión:
+                </p>
+                <br/>
+                <div style="margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #e2e3e5; border-left: 4px solid #6c757d;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <strong>Reunión:</strong> {{ object.name }}<br/>
+                        <strong>Fecha y Hora:</strong> {{ object.start_time.strftime('%d/%m/%Y a las %H:%M') }}<br/>
+                        <strong>Total Invitados:</strong> {{ object.total_invited }}<br/>
+                        <strong>Confirmados:</strong> {{ object.total_confirmed }}<br/>
+                        <strong>Tasa de Asistencia:</strong> {{ object.attendance_rate }}%
+                    </p>
+                </div>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <strong>Estado de los asistentes:</strong>
+                </p>
+                <ul style="margin: 0px; padding: 0px; font-size: 13px;">
+                    {% for attendee in object.attendee_ids %}
+                    <li>{{ attendee.name or attendee.email }} - 
+                        {% if attendee.status == 'confirmed' %}
+                        ✅ Confirmado
+                        {% elif attendee.status == 'declined' %}
+                        ❌ Rechazado
+                        {% elif attendee.status == 'attended' %}
+                        🎯 Asistió
+                        {% else %}
+                        ⏳ Pendiente
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Puedes gestionar la reunión desde Odoo: <a href="{{ object.get_base_url() }}/web#id={{ object.id }}&amp;model=zoom.meeting&amp;view_type=form" style="color: #007bff;">Ver Reunión</a>
+                </p>
+                <br/>
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Saludos,<br/>
+                    Sistema de Notificaciones Zoom
+                </p>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</odoo>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Configuración automática de reuniones Zoom para tickets -->
+        <record id="helpdesk_zoom_auto_config" model="ir.config_parameter">
+            <field name="key">helpdesk.zoom.auto_create_meetings</field>
+            <field name="value">True</field>
+        </record>
+        
+        <!-- Duración por defecto de reuniones de soporte -->
+        <record id="helpdesk_zoom_default_duration" model="ir.config_parameter">
+            <field name="key">helpdesk.zoom.default_duration</field>
+            <field name="value">60</field>
+        </record>
+        
+        <!-- Sincronización automática cada 5 minutos -->
+        <record id="helpdesk_zoom_sync_interval" model="ir.config_parameter">
+            <field name="key">helpdesk.zoom.sync_interval</field>
+            <field name="value">5</field>
+        </record>
+        
+        <!-- Plantilla de email para invitaciones a reuniones de soporte -->
+        <record id="helpdesk_zoom_meeting_template" model="mail.template">
+            <field name="name">Invitación a Reunión de Soporte Zoom</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="subject">Reunión de Soporte - Ticket #{{ object.id }}</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="email_to">{{ object.partner_id.email if object.partner_id else '' }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Estimado/a {{ object.partner_id.name if object.partner_id else 'Cliente' }},</p>
+                    
+                    <p>Hemos programado una reunión de soporte para resolver su consulta:</p>
+                    
+                    <div style="background-color: #f8f9fa; padding: 15px; border-left: 4px solid #007bff; margin: 15px 0;">
+                        <h3 style="margin-top: 0; color: #007bff;">📋 Detalles del Ticket</h3>
+                        <p><strong>Ticket #:</strong> {{ object.id }}</p>
+                        <p><strong>Asunto:</strong> {{ object.name }}</p>
+                        <p><strong>Descripción:</strong> {{ object.description or 'Sin descripción' }}</p>
+                        <p><strong>Prioridad:</strong> {{ object.priority }}</p>
+                    </div>
+                    
+                    <div style="background-color: #e8f5e8; padding: 15px; border-left: 4px solid #28a745; margin: 15px 0;">
+                        <h3 style="margin-top: 0; color: #28a745;">📹 Información de la Reunión Zoom</h3>
+                        <p><strong>Hora de inicio:</strong> {{ object.meeting_start_time or 'Por confirmar' }}</p>
+                        <p><strong>Duración estimada:</strong> {{ object.meeting_duration or 60 }} minutos</p>
+                        <p><strong>Anfitrión:</strong> {{ object.host_name or user.name }}</p>
+                        
+                        {% if object.zoom_join_url %}
+                        <p style="margin-top: 15px;">
+                            <a href="{{ object.zoom_join_url }}" 
+                               style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                                🎯 Unirse a la Reunión
+                            </a>
+                        </p>
+                        {% endif %}
+                    </div>
+                    
+                    <p>Si tiene alguna pregunta o necesita reprogramar la reunión, por favor responda a este email.</p>
+                    
+                    <p>Saludos cordiales,<br/>
+                    Equipo de Soporte</p>
+                </div>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

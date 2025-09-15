@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Vista de formulario extendida para helpdesk.ticket -->
+        <record id="helpdesk_ticket_form_view_zoom" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.form.zoom</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="📹 Información Zoom" name="zoom_info">
+                        <group>
+                            <group string="Información de Reunión">
+                                <field name="zoom_meeting_id" widget="badge"/>
+                                <field name="zoom_meeting_topic"/>
+                                <field name="meeting_status" widget="badge"/>
+                                <field name="zoom_join_url" widget="url" readonly="1"/>
+                                <field name="zoom_start_url" widget="url" readonly="1"/>
+                            </group>
+                            <group string="Participantes">
+                                <field name="total_attendees"/>
+                                <field name="confirmed_attendees"/>
+                                <field name="host_name"/>
+                                <field name="host_email"/>
+                                <field name="attendees_list" widget="text" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                            <group string="Tiempo">
+                                <field name="meeting_duration"/>
+                                <field name="actual_duration"/>
+                                <field name="meeting_start_time"/>
+                                <field name="meeting_end_time"/>
+                                <field name="actual_start_time"/>
+                                <field name="actual_end_time"/>
+                            </group>
+                            <group string="Control y Sincronización">
+                                <field name="zoom_created" widget="boolean_toggle"/>
+                                <field name="zoom_synced" widget="boolean_toggle"/>
+                                <field name="last_sync"/>
+                                <field name="created_in_zoom"/>
+                                <field name="recording_available" widget="boolean_toggle"/>
+                                <field name="recording_url" widget="url" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <!-- Botones de acción -->
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_sync_zoom_data" 
+                                    type="object" 
+                                    class="oe_stat_button" 
+                                    icon="fa-refresh"
+                                    string="Sincronizar"
+                                    help="Sincronizar datos de Zoom"
+                                    invisible="not zoom_created"/>
+                        </div>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+    </data>
+</odoo>
