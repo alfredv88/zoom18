@@ -15,8 +15,8 @@
         - Dashboard personalizado
         - Integración con tareas de proyecto
     """,
-    'author': 'https://www.freelancer.com/u/alfredvasquez',
-    'website': 'https://github.com/alfredv88/zoom18',
+    'author': 'AMS Desarrollos - alfredv88',
+    'website': 'https://www.facebook.com/people/AMS-Desarrollos/61580100113334/',
     'depends': [
         'base',
         'project',
@@ -55,6 +55,7 @@
     'currency': 'EUR',
     'support': 'alfredv88@gmail.com',
     'images': [
+        'static/description/Screenshot_24.jpg',
         'static/description/Captura desde 2025-09-14 01-30-27.png',
         'static/description/Captura desde 2025-09-14 01-31-03.png',
         'static/description/Captura desde 2025-09-14 01-31-13.png',
